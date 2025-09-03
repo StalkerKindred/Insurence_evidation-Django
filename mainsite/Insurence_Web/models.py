@@ -1,23 +1,36 @@
 from django.db import models
 
 # Create your models here.
-class InsuredPersons(models.Model):
-        #insured_id = 
-        #insurer_person = 
-        name = models.CharField(max_length=40)
-        age = models.IntegerField()
-        phone_number = models.IntegerField()
-        email = models.CharField(max_length=100)
-        #password = 
+#Passwords will be stored as imprints that will be encoded
 
-class InsurerPersons(models.Model):
-        #insurer_id = 
-        name = models.CharField(max_length=40)
+class InsurerEmployees(models.Model):
+        #Keys
+        insurer_id = models.PositiveIntegerField(primary_key=True)
+        #Data
+        first_name = models.CharField(max_length=40)
+        last_name = models.CharField(max_length=40)
         email = models.CharField(max_length=100)
-        #password = 
+        password = models.CharField(max_length=100)
+
+class InsuredPersons(models.Model):
+        #Keys
+        insured_id = models.PositiveIntegerField(primary_key=True)
+        insurer_id = models.ForeignKey(InsurerEmployees)
+        #Data
+        first_name = models.CharField(max_length=40)
+        last_name = models.CharField(max_length=40)
+        date_of_birth = models.PositiveIntegerField()
+        phone_number = models.PositiveIntegerField()
+        email = models.CharField(max_length=100)
+        password = models.CharField(max_length=100) 
 
 class InsurenceQuestionare(models.Model):
+        #Keys
+        insurence_questionare_id = models.PositiveIntegerField(primary_key=True)
+        insured_person = models.ForeignKey(InsuredPersons, on_delete=models.CASCADE)
+        insurer_person = models.ForeignKey(InsuredPersons, on_delete=models.CASCADE)
         #Default 0 means No
+        #Data
         question_1_answer = models.IntegerField(default=0)
         question_2_answer = models.IntegerField(default=0)
         question_3_answer = models.IntegerField(default=0)
@@ -30,11 +43,14 @@ class InsurenceQuestionare(models.Model):
         question_10_answer = models.IntegerField(default=0)
 
 class Insurence(models.Model):
-        insured_person = models.ForeignKey(InsuredPersons, on_delete=models.CASCADE)
-        insurer_person = models.ForeignKey(InsurerPersons, on_delete=models.CASCADE)
-        Insurence_questionare = models.ForeignKey(InsurenceQuestionare, on_delete=models.CASCADE)
+        #Keys
+        insurence_id = models.PositiveIntegerField(primary_key=True)
+        insured_id = models.ForeignKey(InsuredPersons, on_delete=models.CASCADE)
+        insurer_id = models.ForeignKey(InsurerEmployees, on_delete=models.CASCADE)
+        insurence_questionare_id = models.ForeignKey(InsurenceQuestionare, on_delete=models.CASCADE)
+        #Data
         insurence_start = models.DateTimeField()
         insurence_end = models.DateTimeField()
         insurence_type = models.CharField(max_length=100)
-        insurence_monthly_payment = models.IntegerField()
-        insurence_loss_payment = models.IntegerField()
+        insurence_monthly_payment = models.PositiveIntegerField()
+        insurence_loss_payment = models.PositiveIntegerField()
