@@ -1,0 +1,4 @@
+Created super user for testing purposes:
+Username: SuperTester
+Email: SuperTester@Test.com
+Password: Tester
