@@ -21,12 +21,11 @@ class InsurerEmployees(models.Model):
 class InsuredPersons(models.Model):
         #Keys
         insured_id = models.PositiveIntegerField(primary_key=True)
-        insurer = models.ForeignKey(InsurerEmployees, on_delete=models.PROTECT)
         #Data
         first_name = models.CharField(max_length=40)
         last_name = models.CharField(max_length=40)
-        date_of_birth = models.PositiveIntegerField()
-        phone_number = models.PositiveIntegerField()
+        date_of_birth = models.DateField()
+        phone_number = models.CharField(max_length=15)
         email = models.CharField(max_length=100)
         password = models.CharField(max_length=100) 
 
@@ -41,7 +40,7 @@ class InsurenceQuestionare(models.Model):
         #Keys
         insurence_questionare_id = models.PositiveIntegerField(primary_key=True)
         insured = models.ForeignKey(InsuredPersons, on_delete=models.CASCADE, related_name="insured_person")
-        insurer = models.ForeignKey(InsuredPersons, on_delete=models.PROTECT, related_name="insurer_employee")
+        insurer = models.ForeignKey(InsuredPersons, on_delete=models.CASCADE, related_name="insurer_employee")
         #Default 0 means No
         #Data
         question_1_answer = models.IntegerField(default=0)
@@ -73,8 +72,8 @@ class Insurence(models.Model):
         insurence_start = models.DateTimeField()
         insurence_end = models.DateTimeField()
         insurence_type = models.CharField(max_length=100)
-        insurence_monthly_payment = models.PositiveIntegerField()
-        insurence_claims_payment = models.PositiveIntegerField()
+        insurence_monthly_payment = models.FloatField()
+        insurence_claims_payment = models.FloatField()
 
         def __str__(self):
                 return (f"Insurence ID: {self.insurence_id}")
