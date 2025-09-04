@@ -15,7 +15,7 @@ class InsurerEmployees(models.Model):
 class InsuredPersons(models.Model):
         #Keys
         insured_id = models.PositiveIntegerField(primary_key=True)
-        insurer_id = models.ForeignKey(InsurerEmployees)
+        insurer = models.ForeignKey(InsurerEmployees, on_delete=models.PROTECT)
         #Data
         first_name = models.CharField(max_length=40)
         last_name = models.CharField(max_length=40)
@@ -27,8 +27,8 @@ class InsuredPersons(models.Model):
 class InsurenceQuestionare(models.Model):
         #Keys
         insurence_questionare_id = models.PositiveIntegerField(primary_key=True)
-        insured_person = models.ForeignKey(InsuredPersons, on_delete=models.CASCADE)
-        insurer_person = models.ForeignKey(InsuredPersons, on_delete=models.CASCADE)
+        insured_fk = models.ForeignKey(InsuredPersons, on_delete=models.CASCADE, related_name="insured_person")
+        insurer_fk = models.ForeignKey(InsuredPersons, on_delete=models.PROTECT, related_name="insurer_employee")
         #Default 0 means No
         #Data
         question_1_answer = models.IntegerField(default=0)
@@ -45,9 +45,9 @@ class InsurenceQuestionare(models.Model):
 class Insurence(models.Model):
         #Keys
         insurence_id = models.PositiveIntegerField(primary_key=True)
-        insured_id = models.ForeignKey(InsuredPersons, on_delete=models.CASCADE)
-        insurer_id = models.ForeignKey(InsurerEmployees, on_delete=models.CASCADE)
-        insurence_questionare_id = models.ForeignKey(InsurenceQuestionare, on_delete=models.CASCADE)
+        insured = models.ForeignKey(InsuredPersons, on_delete=models.CASCADE)
+        insurer = models.ForeignKey(InsurerEmployees, on_delete=models.CASCADE)
+        insurence_questionare = models.ForeignKey(InsurenceQuestionare, on_delete=models.CASCADE)
         #Data
         insurence_start = models.DateTimeField()
         insurence_end = models.DateTimeField()
