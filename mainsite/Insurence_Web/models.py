@@ -40,7 +40,7 @@ class InsurenceQuestionare(models.Model):
         #Keys
         insurence_questionare_id = models.PositiveIntegerField(primary_key=True)
         insured = models.ForeignKey(InsuredPersons, on_delete=models.CASCADE, related_name="insured_person")
-        insurer = models.ForeignKey(InsuredPersons, on_delete=models.CASCADE, related_name="insurer_employee")
+        insurer = models.ForeignKey(InsurerEmployees, on_delete=models.CASCADE, related_name="insurer_employee")
         #Default 0 means No
         #Data
         question_1_answer = models.IntegerField(default=0)
