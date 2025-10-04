@@ -17,3 +17,34 @@ def insurence_detail(request, id):
 def questionare_detail(request, id):
     detail = get_object_or_404(InsurenceQuestionare, pk=id)
     return HttpResponse(detail.more_info())
+"""
+# - views for menu
+    # - Home
+def index():
+
+def index_updates():
+
+    # - Insured 
+def insured_new():
+
+def insured_search():
+
+    # - Insurences
+def insurence_new():
+
+def insurence_my():
+
+def insurence_search():
+
+    # - Questionares
+def questionare_new():
+
+def questionare_search():
+
+    # - Account
+def account_profile():
+
+def account_settings():
+
+def account_sign_out():
+"""
