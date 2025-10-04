@@ -12,7 +12,7 @@
           >
             <use xlink:href="#bootstrap"></use>
           </svg>
-          <span class="fs-5 fw-semibold">Collapsible</span>
+          <span class="fs-5 fw-semibold">Claimnots</span>
         </a>
         <ul class="list-unstyled ps-0">
           <li class="mb-1">
@@ -20,11 +20,11 @@
               class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed"
               data-bs-toggle="collapse"
               data-bs-target="#home-collapse"
-              aria-expanded="true"
+              aria-expanded="false"
             >
               Home
             </button>
-            <div class="collapse show" id="home-collapse">
+            <div class="collapse" id="home-collapse">
               <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
                 <li>
                   <a
@@ -40,13 +40,6 @@
                     >Updates</a
                   >
                 </li>
-                <li>
-                  <a
-                    href="#"
-                    class="link-body-emphasis d-inline-flex text-decoration-none rounded"
-                    >Reports</a
-                  >
-                </li>
               </ul>
             </div>
           </li>
@@ -54,54 +47,12 @@
             <button
               class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed"
               data-bs-toggle="collapse"
-              data-bs-target="#dashboard-collapse"
+              data-bs-target="#insured-collapse"
               aria-expanded="false"
             >
-              Dashboard
+              Insured
             </button>
-            <div class="collapse" id="dashboard-collapse">
-              <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-                <li>
-                  <a
-                    href="#"
-                    class="link-body-emphasis d-inline-flex text-decoration-none rounded"
-                    >Overview</a
-                  >
-                </li>
-                <li>
-                  <a
-                    href="#"
-                    class="link-body-emphasis d-inline-flex text-decoration-none rounded"
-                    >Weekly</a
-                  >
-                </li>
-                <li>
-                  <a
-                    href="#"
-                    class="link-body-emphasis d-inline-flex text-decoration-none rounded"
-                    >Monthly</a
-                  >
-                </li>
-                <li>
-                  <a
-                    href="#"
-                    class="link-body-emphasis d-inline-flex text-decoration-none rounded"
-                    >Annually</a
-                  >
-                </li>
-              </ul>
-            </div>
-          </li>
-          <li class="mb-1">
-            <button
-              class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed"
-              data-bs-toggle="collapse"
-              data-bs-target="#orders-collapse"
-              aria-expanded="false"
-            >
-              Orders
-            </button>
-            <div class="collapse" id="orders-collapse">
+            <div class="collapse" id="insured-collapse">
               <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
                 <li>
                   <a
@@ -114,21 +65,70 @@
                   <a
                     href="#"
                     class="link-body-emphasis d-inline-flex text-decoration-none rounded"
-                    >Processed</a
+                    >Searching</a
+                  >
+                </li>
+              </ul>
+            </div>
+          </li>
+          <li class="mb-1">
+            <button
+              class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed"
+              data-bs-toggle="collapse"
+              data-bs-target="#insurences-collapse"
+              aria-expanded="false"
+            >
+              Insurences
+            </button>
+            <div class="collapse" id="insurences-collapse">
+              <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                <li>
+                  <a
+                    href="#"
+                    class="link-body-emphasis d-inline-flex text-decoration-none rounded"
+                    >New</a
                   >
                 </li>
                 <li>
                   <a
                     href="#"
                     class="link-body-emphasis d-inline-flex text-decoration-none rounded"
-                    >Shipped</a
+                    >My Insurences</a
                   >
                 </li>
                 <li>
                   <a
                     href="#"
                     class="link-body-emphasis d-inline-flex text-decoration-none rounded"
-                    >Returned</a
+                    >Searching</a
+                  >
+                </li>
+              </ul>
+            </div>
+          </li>
+          <li class="mb-1">
+            <button
+              class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed"
+              data-bs-toggle="collapse"
+              data-bs-target="#questionares-collapse"
+              aria-expanded="false"
+            >
+              Questionares
+            </button>
+            <div class="collapse" id="questionares-collapse">
+              <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                <li>
+                  <a
+                    href="#"
+                    class="link-body-emphasis d-inline-flex text-decoration-none rounded"
+                    >New</a
+                  >
+                </li>
+                <li>
+                  <a
+                    href="#"
+                    class="link-body-emphasis d-inline-flex text-decoration-none rounded"
+                    >Searching</a
                   >
                 </li>
               </ul>
@@ -146,13 +146,6 @@
             </button>
             <div class="collapse" id="account-collapse">
               <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-                <li>
-                  <a
-                    href="#"
-                    class="link-body-emphasis d-inline-flex text-decoration-none rounded"
-                    >New...</a
-                  >
-                </li>
                 <li>
                   <a
                     href="#"
