@@ -1,0 +1,15 @@
+{% extends "Insurence_Web/base.html"%}
+
+{% block title %}New Insurence{% endblock %}
+
+{% block content %}
+<div class="form-group">
+<form method="post">
+    <table align="center">
+        {{form}}
+    </table>
+    {% csrf_token %}
+    <button type="submit">Create</button>
+</form>
+</div>
+{% endblock %}
