@@ -3,12 +3,21 @@ from django.db import models
 # Create your models here.
 #Passwords will be stored as imprints that will be encoded
 
+#Choices:
+gender_choices = [
+        ("M","Male"),
+        ("F","Female"),
+        ("O","Other"),
+        ]
+        
+
 class InsurerEmployees(models.Model):
         #Keys
         insurer_id = models.PositiveIntegerField(primary_key=True)
         #Data
         first_name = models.CharField(max_length=40)
         last_name = models.CharField(max_length=40)
+        gender = models.CharField(max_length=7, choices=gender_choices, default="M")
         email = models.CharField(max_length=100)
         password = models.CharField(max_length=100)
 
@@ -24,10 +33,10 @@ class InsuredPersons(models.Model):
         #Data
         first_name = models.CharField(max_length=40)
         last_name = models.CharField(max_length=40)
+        gender = models.CharField(max_length=7, choices=gender_choices, default="M")
         date_of_birth = models.DateField()
-        phone_number = models.CharField(max_length=15)
+        phone_number = models.CharField(max_length=10)
         email = models.CharField(max_length=100)
-        password = models.CharField(max_length=100) 
 
         def __str__(self):
                 return  self.first_name + f" {self.last_name}" + f" - ID: {self.insured_id}"
@@ -40,7 +49,7 @@ class InsurenceQuestionare(models.Model):
         #Keys
         insurence_questionare_id = models.PositiveIntegerField(primary_key=True)
         insured = models.ForeignKey(InsuredPersons, on_delete=models.CASCADE, related_name="insured_person")
-        insurer = models.ForeignKey(InsurerEmployees, on_delete=models.CASCADE, related_name="insurer_employee")
+        insurer = models.ForeignKey(InsurerEmployees, on_delete=models.PROTECT, related_name="insurer_employee")
         #Default 0 means No
         #Data
         question_1_answer = models.IntegerField(default=0)

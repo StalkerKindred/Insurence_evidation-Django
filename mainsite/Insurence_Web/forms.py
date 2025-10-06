@@ -9,10 +9,10 @@ class InsuredForm(forms.ModelForm):
                     #Data
                     "first_name",
                     "last_name",
+                    "gender",
                     "date_of_birth",
                     "phone_number",
-                    "email",
-                    "password"
+                    "email"
                     ]
         
         widgets = {  #Keys
@@ -20,9 +20,9 @@ class InsuredForm(forms.ModelForm):
                     #Data
                     "first_name": forms.TextInput(attrs={"class":"form-control"}),
                     "last_name": forms.TextInput(attrs={"class":"form-control"}),
+                    "gender": forms.Select(attrs={"class":"form-control"}),
                     "date_of_birth": forms.TextInput(attrs={"class":"form-control"}),
                     "phone_number": forms.TextInput(attrs={"class":"form-control"}),
-                    "email": forms.TextInput(attrs={"class":"form-control"}),
-                    "password": forms.TextInput(attrs={"class":"form-control"}),
+                    "email": forms.TextInput(attrs={"class":"form-control"})
                     }
 
