@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse
-from .forms import InsuredForm
+from .forms import *
 from .models import InsuredPersons, InsurerEmployees, Insurence, InsurenceQuestionare
 
 def insured_detail(request, id):
@@ -28,26 +28,43 @@ def index_updates(request):
 
     # - Insured 
 def insured_new(request):
+    title = "New Insured"
     if request.method == "POST":
         form = InsuredForm(request.POST)
         if form.is_valid():
             form.save()
     else:
         form = InsuredForm()
-    return render(request, "Insurence_Web/insured/new.html", {"form": form})
-"""    
-def insured_search():
+    return render(request, "Insurence_Web/form.html", {"form": form, "title": title})
+  
+#def insured_search():
 
     # - Insurences
-def insurence_new():
+def insurence_new(request):
+    title = "New Insurence"
+    if request.method == "POST":
+        form = InsurenceForm(request.POST)
+        if form.is_valid():
+            form.save()
+    else:
+        form = InsurenceForm()
+    return render(request, "Insurence_Web/form.html", {"form": form ,"title": title})
 
-def insurence_my():
+#def insurence_my():
 
-def insurence_search():
+#def insurence_search():
 
     # - Questionares
-def questionare_new():
-
+def questionare_new(request):
+    title = "New Questionare"
+    if request.method == "POST":
+        form = QuestionareForm(request.POST)
+        if form.is_valid():
+            form.save()
+    else:
+        form = QuestionareForm()
+    return render(request, "Insurence_Web/form.html", {"form": form , "title": title})
+"""  
 def questionare_search():
 
     # - Account
