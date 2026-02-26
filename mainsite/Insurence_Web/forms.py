@@ -11,6 +11,7 @@ class InsuredForm(forms.ModelForm):
                     "last_name",
                     "gender",
                     "date_of_birth",
+                    'phone_number_prefix',
                     "phone_number",
                     "email"
                     ]
@@ -22,6 +23,7 @@ class InsuredForm(forms.ModelForm):
                     "last_name": forms.TextInput(attrs={"class":"form-control"}),
                     "gender": forms.Select(attrs={"class":"form-control"}),
                     "date_of_birth": forms.TextInput(attrs={"class":"form-control"}),
+                    "phone_number_prefix": forms.Select(attrs={"class":"form-control"}),
                     "phone_number": forms.TextInput(attrs={"class":"form-control"}),
                     "email": forms.TextInput(attrs={"class":"form-control"})
                     }

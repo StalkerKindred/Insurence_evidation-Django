@@ -1,5 +1,23 @@
 from django.db import models
 
+import phonenumbers
+from phonenumbers.phonenumberutil import COUNTRY_CODE_TO_REGION_CODE
+
+def get_prefix_choices():
+    choices = []
+
+    for code, regions in COUNTRY_CODE_TO_REGION_CODE.items():
+        for region in regions:
+            if region == "001":  # skip non-geographic
+                continue
+            print(region, code)
+            choice = [region, f"{region} +{code}"]
+            choices.append(choice)
+
+    choices.sort(key=lambda x: x[0])
+
+    return choices
+
 # Create your models here.
 #Passwords will be stored as imprints that will be encoded
 
@@ -11,6 +29,9 @@ gender_choices = [
         ]
         
 
+
+prefix_number_choices = get_prefix_choices
+#Models
 class InsurerEmployees(models.Model):
         #Keys
         insurer_id = models.PositiveIntegerField(primary_key=True)
@@ -35,6 +56,7 @@ class InsuredPersons(models.Model):
         last_name = models.CharField(max_length=40)
         gender = models.CharField(max_length=7, choices=gender_choices, default="M")
         date_of_birth = models.DateField()
+        phone_number_prefix = models.CharField(max_length=4, choices=prefix_number_choices, default="CZ")
         phone_number = models.CharField(max_length=10)
         email = models.CharField(max_length=100)
 
