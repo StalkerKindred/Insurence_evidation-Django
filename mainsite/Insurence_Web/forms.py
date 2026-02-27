@@ -19,6 +19,7 @@ class InsuredForm(forms.ModelForm):
                     'city',
                     'parcel',
                     'home_number',
+                    'home_delivery_number',
                     'post_code',
                     #Bank Info
                     'bank_account_number',
@@ -43,6 +44,7 @@ class InsuredForm(forms.ModelForm):
                     'city': forms.TextInput(attrs={"class":"form-control"}),
                     'parcel': forms.TextInput(attrs={"class":"form-control"}),
                     'home_number': forms.NumberInput(attrs={"class":"form-control"}),
+                    'home_delivery_number': forms.NumberInput(attrs={"class":"form-control"}),
                     'post_code': forms.NumberInput(attrs={"class":"form-control"}),
                     #Bank Info
                     'bank_account_number': forms.NumberInput(attrs={"class":"form-control"}),

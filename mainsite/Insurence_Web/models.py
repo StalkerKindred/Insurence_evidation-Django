@@ -29,7 +29,7 @@ gender_choices = [
         
 
 
-prefix_number_choices = get_prefix_choices
+prefix_number_choices = get_prefix_choices()
 #Models
 class InsurerEmployees(models.Model):
         #Keys
@@ -67,6 +67,7 @@ class InsuredPersons(models.Model):
         city = models.CharField(max_length=40)
         parcel = models.CharField(max_length=40)
         home_number = models.IntegerField()
+        home_delivery_number = models.IntegerField()
         post_code = models.IntegerField()
         #Bank Info
         bank_account_number = models.IntegerField()
