@@ -7,10 +7,22 @@ class InsuredForm(forms.ModelForm):
         fields = [  #Keys
                     "insured_id",
                     #Data
+                    #Personal info
                     "first_name",
                     "last_name",
                     "gender",
                     "date_of_birth",
+                    'birth_number',
+                    'goverment_id',
+                    #Adress
+                    'state',
+                    'city',
+                    'parcel',
+                    'home_number',
+                    'post_code',
+                    #Bank Info
+                    'bank_account_number',
+                    #Contact
                     'phone_number_prefix',
                     "phone_number",
                     "email"
@@ -19,10 +31,22 @@ class InsuredForm(forms.ModelForm):
         widgets = { #Keys
                     "insured_id": forms.TextInput(attrs={"class":"form-control"}),
                     #Data
+                    #Personal info
                     "first_name": forms.TextInput(attrs={"class":"form-control"}),
                     "last_name": forms.TextInput(attrs={"class":"form-control"}),
                     "gender": forms.Select(attrs={"class":"form-control"}),
                     "date_of_birth": forms.TextInput(attrs={"class":"form-control"}),
+                    'birth_number': forms.NumberInput(attrs={"class":"form-control"}),
+                    'goverment_id': forms.NumberInput(attrs={"class":"form-control"}),
+                    #Adress
+                    'state': forms.TextInput(attrs={"class":"form-control"}),
+                    'city': forms.TextInput(attrs={"class":"form-control"}),
+                    'parcel': forms.TextInput(attrs={"class":"form-control"}),
+                    'home_number': forms.NumberInput(attrs={"class":"form-control"}),
+                    'post_code': forms.NumberInput(attrs={"class":"form-control"}),
+                    #Bank Info
+                    'bank_account_number': forms.NumberInput(attrs={"class":"form-control"}),
+                    #Contact
                     "phone_number_prefix": forms.Select(attrs={"class":"form-control"}),
                     "phone_number": forms.TextInput(attrs={"class":"form-control"}),
                     "email": forms.TextInput(attrs={"class":"form-control"})

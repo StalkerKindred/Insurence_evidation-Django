@@ -10,7 +10,6 @@ def get_prefix_choices():
         for region in regions:
             if region == "001":  # skip non-geographic
                 continue
-            print(region, code)
             choice = [region, f"{region} +{code}"]
             choices.append(choice)
 
@@ -52,13 +51,25 @@ class InsuredPersons(models.Model):
         #Keys
         insured_id = models.PositiveIntegerField(primary_key=True)
         #Data
+        #Personal info
         first_name = models.CharField(max_length=40)
         last_name = models.CharField(max_length=40)
         gender = models.CharField(max_length=7, choices=gender_choices, default="M")
         date_of_birth = models.DateField()
+        birth_number = models.IntegerField()
+        goverment_id = models.CharField(max_length=8)
+        #Adress
+        state = models.CharField(max_length=40)
+        city = models.CharField(max_length=40)
+        parcel = models.CharField(max_length=40)
+        home_number = models.IntegerField()
+        post_code = models.IntegerField()
+        #Bank Info
+        bank_account_number = models.IntegerField()
+        #Contact
         phone_number_prefix = models.CharField(max_length=4, choices=prefix_number_choices, default="CZ")
         phone_number = models.CharField(max_length=10)
-        email = models.CharField(max_length=100)
+        email = models.EmailField()
 
         def __str__(self):
                 return  self.first_name + f" {self.last_name}" + f" - ID: {self.insured_id}"
