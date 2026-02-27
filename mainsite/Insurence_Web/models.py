@@ -38,7 +38,11 @@ class InsurerEmployees(models.Model):
         first_name = models.CharField(max_length=40)
         last_name = models.CharField(max_length=40)
         gender = models.CharField(max_length=7, choices=gender_choices, default="M")
-        email = models.CharField(max_length=100)
+        #Contacts
+        email = models.EmailField()
+        phone_number_prefix = models.CharField(max_length=4, choices=prefix_number_choices, default="CZ")
+        phone_number = models.IntegerField()
+        #Else
         password = models.CharField(max_length=100)
 
         def __str__(self):
@@ -68,7 +72,7 @@ class InsuredPersons(models.Model):
         bank_account_number = models.IntegerField()
         #Contact
         phone_number_prefix = models.CharField(max_length=4, choices=prefix_number_choices, default="CZ")
-        phone_number = models.CharField(max_length=10)
+        phone_number = models.IntegerField()
         email = models.EmailField()
 
         def __str__(self):
