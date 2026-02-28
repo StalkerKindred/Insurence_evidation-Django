@@ -48,6 +48,8 @@ def insured_new(request):
 def insured_search(request):
     title = 'Searching'
     options = []
+    print("This is request")
+    print(request)
     
     return render(request, f'Insurence_Web/searching.html', {"title": title, "right_side_menu": utility_menu})
 
