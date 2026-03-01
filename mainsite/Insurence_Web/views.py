@@ -1,6 +1,7 @@
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse
 from .forms import *
+from django.db.models import Q
 from .models import InsuredPersons, InsurerEmployees, Insurence, InsurenceQuestionare
 
 #Right side menus:
@@ -9,7 +10,7 @@ utility_menu = "Insurence_Web/right_side_menu_utilities.html"
 #Use : {"right_side_menu": flavor_text_menu}
 flavor_text_menu = 'Insurence_Web/right_side_menu.html'
 
-
+search_lookup_type = "__icontains"
 
 def insured_detail(request, id):
     detail = get_object_or_404(InsuredPersons, pk=id)
@@ -47,9 +48,33 @@ def insured_new(request):
 
 def insured_search(request):
     title = 'Searching'
+    query = request.GET.get("q")
     options = []
-    print("This is request")
-    print(request)
+    
+    if query:
+        searching_results = InsuredPersons.objects.all()
+        search_fields = []
+        for field in InsuredPersons._meta.fields:
+            if field.get_internal_type() in ["CharField", "TextField"]:
+                search_fields.append((field.name, f"{search_lookup_type}"))
+            elif field.get_internal_type() in ["IntegerField"]:
+                search_fields.append((field.name, ""))
+
+
+            # Fix ak to najde personu nech ju to len skipne
+        for word in query.split():
+            q_object = Q()
+            for field_name, lookup in search_fields:
+                if lookup:
+                    q_object |= Q(**{f"{field_name}{lookup}": word})
+                elif word.isdigit():
+                    q_object |= Q(**{field_name: int(word)})
+
+                searching_results = searching_results.filter(q_object)
+
+        return render(request, f'Insurence_Web/searching.html', {"title": title, 
+                                                                 "right_side_menu": utility_menu, 
+                                                                 'search_result_list': searching_results})
     
     return render(request, f'Insurence_Web/searching.html', {"title": title, "right_side_menu": utility_menu})
 
