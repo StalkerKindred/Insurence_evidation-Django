@@ -80,8 +80,7 @@ class InsuredPersons(models.Model):
                 return  self.first_name + f" {self.last_name}" + f" - ID: {self.insured_id}"
         
         def search_result(self):
-                results = [self.insured_id,
-                                self.first_name,
+                results = [     self.first_name,
                                 self.last_name,
                                 self.date_of_birth,
                                 self.state,

@@ -12,9 +12,40 @@ flavor_text_menu = 'Insurence_Web/right_side_menu.html'
 
 search_lookup_type = "__icontains"
 
-def insured_detail(request, id):
-    detail = get_object_or_404(InsuredPersons, pk=id)
-    return HttpResponse(str(detail) +" "+ detail.contacts())
+#-------------------------------------------------------------------------
+#---------------------------Functions for views---------------------------
+#-------------------------------------------------------------------------
+
+def get_fields_search(model):
+    search_fields = []
+    for field in model._meta.fields:
+        if field.get_internal_type() in ["CharField", "TextField"]:
+                print(field)
+                search_fields.append((field.name, f"{search_lookup_type}"))
+        elif field.get_internal_type() in ["IntegerField"]:
+                search_fields.append((field.name, ""))
+    return search_fields
+
+def get_fields(model):
+    return [field.name for field in model._meta.fields]
+
+def get_field_data(fields, instance):
+    data = []
+    for field in fields:
+        data.append(getattr(instance, field))
+    return data
+
+#-----------------------------------------------------------
+#---------------------------Views---------------------------
+#-----------------------------------------------------------
+
+def insured_profile(request, id):
+    person = get_object_or_404(InsuredPersons, pk=id)
+    title = person.first_name +" "+ person.last_name
+    search_fields = get_fields(InsuredPersons)
+    data = get_field_data(search_fields, person)
+
+    return render(request, "Insurence_Web/profile_card.html", {"data": data, "fields": search_fields, "title": title, "right_side_menu": flavor_text_menu} )
 
 def insurence_detail(request, id):
     detail = get_object_or_404(Insurence, pk=id)
@@ -53,13 +84,7 @@ def insured_search(request):
     
     if query:
         searching_results = InsuredPersons.objects.all()
-        search_fields = []
-        for field in InsuredPersons._meta.fields:
-            if field.get_internal_type() in ["CharField", "TextField"]:
-                search_fields.append((field.name, f"{search_lookup_type}"))
-            elif field.get_internal_type() in ["IntegerField"]:
-                search_fields.append((field.name, ""))
-
+        search_fields = get_fields(InsuredPersons)
 
             # Fix ak to najde personu nech ju to len skipne
         for word in query.split():
@@ -74,7 +99,8 @@ def insured_search(request):
 
         return render(request, f'Insurence_Web/searching.html', {"title": title, 
                                                                  "right_side_menu": utility_menu, 
-                                                                 'search_result_list': searching_results})
+                                                                 'search_result_list': searching_results
+                                                                 })
     
     return render(request, f'Insurence_Web/searching.html', {"title": title, "right_side_menu": utility_menu})
 

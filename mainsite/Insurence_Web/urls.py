@@ -11,7 +11,7 @@ urlpatterns = [
     path("Insured/New", views.insured_new, name="Insured New"),
     path("Insured/Searching", views.insured_search, name="Insured Searching"),
     #path("insured/searching/{sql bs}", views.insured_new, name="insured new"),
-    path("Insured/<int:id>", views.insured_detail, name="Insured Details"),
+    path("Insured/Profile/<int:id>", views.insured_profile, name="Insured Details"),
     #Insurence things
     path("Insurence/New", views.insurence_new, name="Insurence New"),
     path("Insurence/<int:id>", views.insurence_detail, name="Insurence Details"),

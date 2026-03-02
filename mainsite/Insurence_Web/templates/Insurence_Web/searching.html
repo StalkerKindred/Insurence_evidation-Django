@@ -38,6 +38,7 @@
             <tbody>
                 {% for result in search_result_list %}
                     <tr>
+                        <th scope="row"><a href="Profile/{{result.insured_id}}">{{ result.insured_id }}</a></th>
                         {% for detail in result.search_result %}
                         <th scope="row">{{ detail }}</th>
                         {% endfor %}
