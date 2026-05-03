@@ -1,0 +1,34 @@
+{% extends "Insurence_Web/base.html"%}
+
+{% load static %}
+
+{% block content %}
+
+<div class="row">
+    <div class="col-sm-2">
+        <img src="{% static picture %}" class='img-fluid' alt='Profile image'>
+    </div>
+
+    <div class="col-sm-8 p-5 border-start" >
+            {% for key, value in person_json_info.Personal_info.items %}
+                        <p>{{ key }} : {{ value }}</p>
+            {% endfor %}
+    </div>
+</div>
+
+
+
+<div class="row">
+        <div class="col-sm-2">
+            {% for key, value in person_json_info.Contacts.items %}
+                <p>{{ key }} : {{ value }}</p>
+            {% endfor %}
+    </div>
+
+    <div class="col-sm-8 p-5 border-start" >
+            {% for key, value in person_json_info.Address.items %}
+                <p>{{ key }} : {{ value }}</p>
+            {% endfor %}
+    </div>
+</div>
+{% endblock %}

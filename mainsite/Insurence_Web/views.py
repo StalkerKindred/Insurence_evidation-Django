@@ -20,7 +20,6 @@ def get_fields_search(model):
     search_fields = []
     for field in model._meta.fields:
         if field.get_internal_type() in ["CharField", "TextField"]:
-                print(field)
                 search_fields.append((field.name, f"{search_lookup_type}"))
         elif field.get_internal_type() in ["IntegerField"]:
                 search_fields.append((field.name, ""))
@@ -41,11 +40,26 @@ def get_field_data(fields, instance):
 
 def insured_profile(request, id):
     person = get_object_or_404(InsuredPersons, pk=id)
-    title = person.first_name +" "+ person.last_name
-    search_fields = get_fields(InsuredPersons)
-    data = get_field_data(search_fields, person)
 
-    return render(request, "Insurence_Web/profile_card.html", {"data": data, "fields": search_fields, "title": title, "right_side_menu": flavor_text_menu} )
+    picture_path = ""
+
+    gender = person.get_gender()
+
+    if gender == "Male":
+        picture_path = "images/male_icon.png"
+    elif gender == "Female":
+        picture_path = "images/female_icon.png"
+    else:
+        picture_path = "images/unspecified_gender_icon.png"
+
+    person_json_info =  person.information_to_json()
+
+    title = person_json_info["Personal_info"]["Name"]
+
+    return render(request, "Insurence_Web/insured/insured_profile_card.html", {"title": title,
+                                                                                "person_json_info": person_json_info,
+                                                                               "picture": picture_path,
+                                                                               })
 
 def insurence_detail(request, id):
     detail = get_object_or_404(Insurence, pk=id)
@@ -60,11 +74,13 @@ def questionare_detail(request, id):
 
 def index(request):
     context = "Placeholder Home Page Text" 
-    return render(request, "Insurence_Web/home/home.html",  {"message": context, "right_side_menu": flavor_text_menu})
+    return render(request, "Insurence_Web/home/home.html",  {"message": context, 
+                                                             "right_side_menu": flavor_text_menu})
 
 def index_updates(request):
     context = "Placeholder Update" 
-    return render(request, "Insurence_Web/home/updates.html",  {"message": context, "right_side_menu": flavor_text_menu})
+    return render(request, "Insurence_Web/home/updates.html",  {"message": context, 
+                                                                "right_side_menu": flavor_text_menu})
 
     # - Insured 
 def insured_new(request):
@@ -75,7 +91,9 @@ def insured_new(request):
             form.save()
     else:
         form = InsuredForm()
-    return render(request, "Insurence_Web/form.html", {"form": form, "title": title, "right_side_menu": flavor_text_menu})
+    return render(request, "Insurence_Web/form.html", {"form": form, 
+                                                        "title": title, 
+                                                        "right_side_menu": flavor_text_menu})
 
 def insured_search(request):
     title = 'Searching'
@@ -84,7 +102,7 @@ def insured_search(request):
     
     if query:
         searching_results = InsuredPersons.objects.all()
-        search_fields = get_fields(InsuredPersons)
+        search_fields = get_fields_search(InsuredPersons)
 
             # Fix ak to najde personu nech ju to len skipne
         for word in query.split():
@@ -97,12 +115,13 @@ def insured_search(request):
 
                 searching_results = searching_results.filter(q_object)
 
-        return render(request, f'Insurence_Web/searching.html', {"title": title, 
+        return render(request, 'Insurence_Web/searching.html', {"title": title, 
                                                                  "right_side_menu": utility_menu, 
                                                                  'search_result_list': searching_results
                                                                  })
     
-    return render(request, f'Insurence_Web/searching.html', {"title": title, "right_side_menu": utility_menu})
+    return render(request, 'Insurence_Web/searching.html', {"title": title, 
+                                                             "right_side_menu": utility_menu})
 
     # - Insurences
 def insurence_new(request):
@@ -113,7 +132,9 @@ def insurence_new(request):
             form.save()
     else:
         form = InsurenceForm()
-    return render(request, "Insurence_Web/form.html", {"form": form, "title": title, "right_side_menu": flavor_text_menu})
+    return render(request, "Insurence_Web/form.html", {"form": form, 
+                                                       "title": title, 
+                                                       "right_side_menu": flavor_text_menu})
 
 #def insurence_my():
 
@@ -128,7 +149,9 @@ def questionare_new(request):
             form.save()
     else:
         form = QuestionareForm()
-    return render(request, "Insurence_Web/form.html", {"form": form , "title": title, "right_side_menu": flavor_text_menu})
+    return render(request, "Insurence_Web/form.html", {"form": form , 
+                                                       "title": title, 
+                                                       "right_side_menu": flavor_text_menu})
 """  
 def questionare_search():
 

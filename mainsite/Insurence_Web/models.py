@@ -1,12 +1,18 @@
 from django.db import models
 
-import phonenumbers
-from phonenumbers.phonenumberutil import COUNTRY_CODE_TO_REGION_CODE
+from datetime import date
+
+# from phonenumbers.phonenumberutil import COUNTRY_CODE_TO_REGION_CODE
+from phonenumbers import phonenumberutil as pnu # import COUNTRY_CODE_TO_REGION_CODE
+
+
+def country_code_to_prefix(country_code):
+       return str(pnu.country_code_for_valid_region(country_code))
 
 def get_prefix_choices():
     choices = []
 
-    for code, regions in COUNTRY_CODE_TO_REGION_CODE.items():
+    for code, regions in pnu.COUNTRY_CODE_TO_REGION_CODE.items():
         for region in regions:
             if region == "001":  # skip non-geographic
                 continue
@@ -17,14 +23,13 @@ def get_prefix_choices():
 
     return choices
 
-# Create your models here.
-#Passwords will be stored as imprints that will be encoded
+#Passwords will be later stored as imprints that will be encoded
 
 #Choices:
 gender_choices = [
-        ("M","Male"),
-        ("F","Female"),
-        ("O","Other"),
+        ("Male","Male"),
+        ("Female","Female"),
+        ("Other","Other"),
         ]
         
 
@@ -58,11 +63,11 @@ class InsuredPersons(models.Model):
         #Personal info
         first_name = models.CharField(max_length=40)
         last_name = models.CharField(max_length=40)
-        gender = models.CharField(max_length=7, choices=gender_choices, default="M")
+        gender = models.CharField(max_length=7, choices=gender_choices, default="Other")
         date_of_birth = models.DateField()
         birth_number = models.IntegerField()
         goverment_id = models.CharField(max_length=8)
-        #Adress
+        #Address
         state = models.CharField(max_length=40)
         city = models.CharField(max_length=40)
         parcel = models.CharField(max_length=40)
@@ -75,24 +80,44 @@ class InsuredPersons(models.Model):
         phone_number_prefix = models.CharField(max_length=4, choices=prefix_number_choices, default="CZ")
         phone_number = models.IntegerField()
         email = models.EmailField()
+        
+        def get_age(self):
+                today = date.today()
+                age = today.year - self.date_of_birth.year
+
+                if (today.month, today.day) < (self.date_of_birth.month, self.date_of_birth.day):
+                        age -= 1
+
+                return age
+        
+        # Function for View
+
+        def get_gender(self):
+                return self.gender
 
         def __str__(self):
                 return  self.first_name + f" {self.last_name}" + f" - ID: {self.insured_id}"
         
-        def search_result(self):
-                results = [     self.first_name,
-                                self.last_name,
-                                self.date_of_birth,
-                                self.state,
-                                self.city,
-                                self.phone_number_prefix,
-                                self.email]
+        def information_to_json(self):
+                results = {'Personal_info' : {'Name' : f'{self.first_name + ' ' + self.last_name}',
+                                                'Age' : f'{self.get_age()}',
+                                                'Gender' : self.gender},
+                                'Contacts' : {'Phone' : f'+{str(country_code_to_prefix(self.phone_number_prefix) + str(self.phone_number))}',
+                                              'Email' : self.email},
+                                'Address' : {'State' : self.state,
+                                            'City' : self.city,
+                                            'Parcel' : self.parcel,
+                                            'Home Number' : f'{str(self.home_number) + '/' + str(self.home_delivery_number)}' },
+                                            'Postal Code' : self.post_code
+                                                }
+
                 return results
 
-        def contacts(self):
-                return (f"""Email: {self.email}
-                        Phone: {self.phone_number}""")
-        
+
+
+
+
+
 class InsurenceQuestionare(models.Model):
         #Keys
         insurence_questionare_id = models.PositiveIntegerField(primary_key=True)
