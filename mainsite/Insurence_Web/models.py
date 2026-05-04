@@ -95,8 +95,11 @@ class InsuredPersons(models.Model):
         def get_gender(self):
                 return self.gender
 
+        def get_id(self):
+               return self.insured_id
+
         def __str__(self):
-                return  self.first_name + f" {self.last_name}" + f" - ID: {self.insured_id}"
+                return  self.first_name + f" {self.last_name}"
         
         def information_to_json(self):
                 results = {'Personal_info' : {'Name' : f'{self.first_name + ' ' + self.last_name}',
@@ -110,6 +113,18 @@ class InsuredPersons(models.Model):
                                             'Home Number' : f'{str(self.home_number) + '/' + str(self.home_delivery_number)}' },
                                             'Postal Code' : self.post_code
                                                 }
+
+                return results
+        
+        #Function solely for searching.html so that its less of a hassle to work with it
+        def information_to_json_searching_results(self):
+                results = {
+                                'Name' : f'{self.first_name + ' ' + self.last_name}',
+                                'Birth' : self.date_of_birth,
+                                'City' : self.city,
+                                'Phone' :f'+{str(country_code_to_prefix(self.phone_number_prefix) + str(self.phone_number))}',
+                                'Email' : self.email
+                                                        }
 
                 return results
 

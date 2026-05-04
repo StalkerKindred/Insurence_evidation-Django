@@ -104,7 +104,7 @@ def insured_search(request):
         searching_results = InsuredPersons.objects.all()
         search_fields = get_fields_search(InsuredPersons)
 
-            # Fix ak to najde personu nech ju to len skipne
+            # Fix ak to uz najde cloveka znova nech ju to len skipne
         for word in query.split():
             q_object = Q()
             for field_name, lookup in search_fields:
@@ -115,11 +115,24 @@ def insured_search(request):
 
                 searching_results = searching_results.filter(q_object)
 
-        return render(request, 'Insurence_Web/searching.html', {"title": title, 
+        if searching_results.exists(): 
+            data_payload = {}
+            for person in searching_results:
+                data_payload[person.get_id()] = person.information_to_json_searching_results()
+
+            return render(request, 'Insurence_Web/searching.html', {"title": title, 
                                                                  "right_side_menu": utility_menu, 
-                                                                 'search_result_list': searching_results
-                                                                 })
-    
+                                                                 'search_result_data': data_payload,
+                                                                 'query': query
+                                                                  })
+        else:
+            message = f'Searching for person with "{query}" did not find anyone.'
+            return render(request, 'Insurence_Web/searching.html', {"title": title, 
+                                                                 "right_side_menu": utility_menu, 
+                                                                 'error_message': message,
+                                                                 'query': query
+                                                                  })
+        
     return render(request, 'Insurence_Web/searching.html', {"title": title, 
                                                              "right_side_menu": utility_menu})
 
