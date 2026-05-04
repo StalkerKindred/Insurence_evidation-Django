@@ -90,7 +90,7 @@ class InsuredPersons(models.Model):
 
                 return age
         
-        # Function for View
+        # Functions for View
 
         def get_gender(self):
                 return self.gender

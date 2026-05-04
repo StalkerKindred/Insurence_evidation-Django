@@ -5,30 +5,33 @@
 {% block content %}
 
 <div class="row">
-    <div class="col-sm-2">
-        <img src="{% static picture %}" class='img-fluid' alt='Profile image'>
-    </div>
 
-    <div class="col-sm-8 p-5 border-start" >
+    <!-- Left collum (Image + Contacts) -->
+    <div class="col-sm-3">
+        <img src="{% static picture %}" class="img-fluid mb-4" alt="Profile image">
+
+        {% for key, value in person_json_info.Contacts.items %}
+            <p>
+                {{ key }} : {{ value }}
+            </p>
+        {% endfor %}
+    </div> 
+
+    <!-- Right collum (Personal info + Address) -->
+    <div class="col-sm-9 border-start ps-5 d-flex flex-column justify-content-between">
+
+        <div>
             {% for key, value in person_json_info.Personal_info.items %}
-                        <p>{{ key }} : {{ value }}</p>
-            {% endfor %}
-    </div>
-</div>
-
-
-
-<div class="row">
-        <div class="col-sm-2">
-            {% for key, value in person_json_info.Contacts.items %}
                 <p>{{ key }} : {{ value }}</p>
             {% endfor %}
-    </div>
+        </div>
 
-    <div class="col-sm-8 p-5 border-start" >
+        <div>
             {% for key, value in person_json_info.Address.items %}
                 <p>{{ key }} : {{ value }}</p>
             {% endfor %}
+        </div>
+
     </div>
 </div>
 {% endblock %}
