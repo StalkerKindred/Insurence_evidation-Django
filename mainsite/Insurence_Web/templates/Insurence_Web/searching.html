@@ -41,7 +41,9 @@
     </table>
     <!-- Search results Buttons  -->
     <div class="container mt-5 text-center">
-        <p>buttons</p>
+        {% for number in button_range %}
+            <p> gay {{ number }} </p>
+        {% endfor %}
     </div>
     {% endif %}
 

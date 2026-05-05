@@ -20,9 +20,9 @@ def get_fields_search(model):
     search_fields = []
     for field in model._meta.fields:
         if field.get_internal_type() in ["CharField", "TextField"]:
-                search_fields.append((field.name, f"{search_lookup_type}"))
+            search_fields.append((field.name, f"{search_lookup_type}"))
         elif field.get_internal_type() in ["IntegerField"]:
-                search_fields.append((field.name, ""))
+            search_fields.append((field.name, ""))
     return search_fields
 
 def get_fields(model):
@@ -33,6 +33,10 @@ def get_field_data(fields, instance):
     for field in fields:
         data.append(getattr(instance, field))
     return data
+
+def get_all_model_instances(model):
+    models = model.objects.all()
+    return models
 
 #-----------------------------------------------------------
 #---------------------------Views---------------------------
@@ -57,8 +61,9 @@ def insured_profile(request, id):
     title = person_json_info["Personal_info"]["Name"]
 
     return render(request, "Insurence_Web/insured/insured_profile_card.html", {"title": title,
-                                                                                "person_json_info": person_json_info,
+                                                                               "person_json_info": person_json_info,
                                                                                "picture": picture_path,
+                                                                               "right_side_menu": flavor_text_menu
                                                                                })
 
 def insurence_detail(request, id):
@@ -73,13 +78,13 @@ def questionare_detail(request, id):
     # - Home
 
 def index(request):
-    context = "Placeholder Home Page Text" 
-    return render(request, "Insurence_Web/home/home.html",  {"message": context, 
+    context = "Placeholder Home Page Text"
+    return render(request, "Insurence_Web/home/home.html",  {"message": context,
                                                              "right_side_menu": flavor_text_menu})
 
 def index_updates(request):
-    context = "Placeholder Update" 
-    return render(request, "Insurence_Web/home/updates.html",  {"message": context, 
+    context = "Placeholder Update"
+    return render(request, "Insurence_Web/home/updates.html",  {"message": context,
                                                                 "right_side_menu": flavor_text_menu})
 
     # - Insured 
@@ -91,16 +96,23 @@ def insured_new(request):
             form.save()
     else:
         form = InsuredForm()
-    return render(request, "Insurence_Web/form.html", {"form": form, 
+    return render(request, "Insurence_Web/form.html", {"form": form,
                                                         "title": title, 
                                                         "right_side_menu": flavor_text_menu})
 
 def insured_search(request):
+
     title = 'Searching'
+
+    payload = {"title": title, 
+                "right_side_menu": utility_menu,}
+
     query = request.GET.get("q")
     options = []
-    
+
     if query:
+        payload['query'] = query
+
         searching_results = InsuredPersons.objects.all()
         search_fields = get_fields_search(InsuredPersons)
 
@@ -115,26 +127,27 @@ def insured_search(request):
 
                 searching_results = searching_results.filter(q_object)
 
-        if searching_results.exists(): 
+        if searching_results.exists():
             data_payload = {}
+            person_count = 0
             for person in searching_results:
                 data_payload[person.get_id()] = person.information_to_json_searching_results()
 
-            return render(request, 'Insurence_Web/searching.html', {"title": title, 
-                                                                 "right_side_menu": utility_menu, 
-                                                                 'search_result_data': data_payload,
-                                                                 'query': query
-                                                                  })
+            payload['search_result_data'] = data_payload
+
+            button_count = person_count / 12
+
+            if button_count >= 1:
+                if button_count == float:
+                    button_count = int(button_count) + 1
+                button_range = (1, button_count)
+                payload['button_range'] = button_range
+
         else:
             message = f'Searching for person with "{query}" did not find anyone.'
-            return render(request, 'Insurence_Web/searching.html', {"title": title, 
-                                                                 "right_side_menu": utility_menu, 
-                                                                 'error_message': message,
-                                                                 'query': query
-                                                                  })
-        
-    return render(request, 'Insurence_Web/searching.html', {"title": title, 
-                                                             "right_side_menu": utility_menu})
+            payload['error_message'] = message
+
+    return render(request, 'Insurence_Web/searching.html', payload)
 
     # - Insurences
 def insurence_new(request):
@@ -145,7 +158,7 @@ def insurence_new(request):
             form.save()
     else:
         form = InsurenceForm()
-    return render(request, "Insurence_Web/form.html", {"form": form, 
+    return render(request, "Insurence_Web/form.html", {"form": form,
                                                        "title": title, 
                                                        "right_side_menu": flavor_text_menu})
 
@@ -162,7 +175,7 @@ def questionare_new(request):
             form.save()
     else:
         form = QuestionareForm()
-    return render(request, "Insurence_Web/form.html", {"form": form , 
+    return render(request, "Insurence_Web/form.html", {"form": form,
                                                        "title": title, 
                                                        "right_side_menu": flavor_text_menu})
 """  
