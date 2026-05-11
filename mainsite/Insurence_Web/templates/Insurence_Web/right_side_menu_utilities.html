@@ -1,18 +1,16 @@
 {% block right_side_menu %}
-<div class="col-sm-2">
-
+  <div class="col-sm-2">
         <!-- Blank/Utility menu -->
     {% if right_side_menu_content %}
       <ul class="nav flex-column">
         {% for item in utility_menu %}
-        <li class="nav-item">
+          <li class="nav-item">
             <a class="nav-link" href="{% url item.url %}">
-                {{ item.name }}
+              {{ item.name }}
             </a>
-        </li>
+          </li>
         {% endfor %}
       </ul>
     {% endif %}
-
-</div>
+  </div>
 {% endblock %}

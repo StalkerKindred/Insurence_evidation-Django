@@ -14,8 +14,6 @@ urlpatterns = [
     path("Insured/Profile/<int:id>", views.insured_profile, name="Insured Profile"),
     #Insurence things
     path("Insurence/New", views.insurence_new, name="Insurence New"),
-    path("Insurence/<int:id>", views.insurence_detail, name="Insurence Details"),
     #Questionare things
-    path("Questionare/New", views.questionare_new, name="Questionare New"),
-    path("Questionare/<int:id>", views.questionare_detail, name="Questionare Details"),
+    path("Questionare/New", views.questionare_new, name="Questionare New")
 ]

@@ -8,7 +8,7 @@
         {% if query %}
             <input type="Search" name='q' class="form-control" id="exampleFormControlInput1" placeholder="{{ query }}">
         {% else %}
-            <input type="Search" name='q' class="form-control" id="exampleFormControlInput1" placeholder="Search: name, city...">
+            <input type="Search" name='q' class="form-control" id="exampleFormControlInput1" placeholder="Search only with first name, others are broken for now">
         {% endif %}
     </form>
 </div>
@@ -16,7 +16,7 @@
 <!-- Search results table  -->
 <div class="container mt-5 text-center">
     {% if search_result_data %}
-    <table class="table table-striped table-center">
+        <table class="table table-striped table-center">
             <thead>
                 <tr>
                     <!-- Maybe even make these cols from search results list  -->
@@ -38,19 +38,20 @@
                     </tr>
                  {% endfor %}
             </tbody>
-    </table>
+        </table>
     <!-- Search results Buttons  -->
-    <div class="container mt-5 text-center">
-        {% for number in button_range %}
-            <p> gay {{ number }} </p>
-        {% endfor %}
-    </div>
+        {% if button_range %}
+            <div class="container mt-5 text-center">
+                {% for number in button_range %}
+                    <a href="" class="btn btn-primary">{{ number }}</a>
+                {% endfor %}
+            </div>
+        {% endif %}
+    <!-- Search results error messages  -->
+        {% if error_message %}
+            <p> {{ error_message }} </p>
+        {% endif %}
     {% endif %}
-
-    {% if error_message %}
-        <p> {{ error_message }} </p>
-    {% endif %}
-
 </div>
 
 {% endblock %}

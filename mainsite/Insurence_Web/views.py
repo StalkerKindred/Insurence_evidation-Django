@@ -1,16 +1,15 @@
 from django.shortcuts import render, get_object_or_404
-from django.http import HttpResponse
-from .forms import *
 from django.db.models import Q
-from .models import InsuredPersons, InsurerEmployees, Insurence, InsurenceQuestionare
+from .forms import InsuredForm, QuestionareForm, InsurenceForm
+from .models import InsuredPersons #InsurerEmployees, Insurence, InsurenceQuestionare
 
 #Right side menus:
 #Use : {"right_side_menu": utility_menu}
-utility_menu = "Insurence_Web/right_side_menu_utilities.html"
+UTILITY_MENU = "Insurence_Web/right_side_menu_utilities.html"
 #Use : {"right_side_menu": flavor_text_menu}
-flavor_text_menu = 'Insurence_Web/right_side_menu.html'
+FLAVOR_TEXT_MENU = 'Insurence_Web/right_side_menu.html'
 
-search_lookup_type = "__icontains"
+SEARCH_LOOKUP_TYPE = "__icontains"
 
 #-------------------------------------------------------------------------
 #---------------------------Functions for views---------------------------
@@ -20,11 +19,11 @@ def get_fields_search(model):
     search_fields = []
     for field in model._meta.fields:
         if field.get_internal_type() in ["CharField", "TextField"]:
-            search_fields.append((field.name, f"{search_lookup_type}"))
+            search_fields.append((field.name, f"{SEARCH_LOOKUP_TYPE}"))
         elif field.get_internal_type() in ["IntegerField"]:
             search_fields.append((field.name, ""))
     return search_fields
-
+    
 def get_fields(model):
     return [field.name for field in model._meta.fields]
 
@@ -35,6 +34,7 @@ def get_field_data(fields, instance):
     return data
 
 def get_all_model_instances(model):
+    """Returns all objects of a model given"""
     models = model.objects.all()
     return models
 
@@ -43,6 +43,7 @@ def get_all_model_instances(model):
 #-----------------------------------------------------------
 
 def insured_profile(request, id):
+    """View for insured profile."""
     person = get_object_or_404(InsuredPersons, pk=id)
 
     picture_path = ""
@@ -60,35 +61,41 @@ def insured_profile(request, id):
 
     title = person_json_info["Personal_info"]["Name"]
 
-    return render(request, "Insurence_Web/insured/insured_profile_card.html", {"title": title,
-                                                                               "person_json_info": person_json_info,
-                                                                               "picture": picture_path,
-                                                                               "right_side_menu": flavor_text_menu
-                                                                               })
-
-def insurence_detail(request, id):
-    detail = get_object_or_404(Insurence, pk=id)
-    return HttpResponse(str(detail) + " "+ detail.more_info() + " " + detail.payments())
-
-def questionare_detail(request, id):
-    detail = get_object_or_404(InsurenceQuestionare, pk=id)
-    return HttpResponse(detail.more_info())
-
-# - views for menu
-    # - Home
+    return render(request,
+                  "Insurence_Web/insured/insured_profile_card.html", 
+                        {
+                            "title": title,
+                            "person_json_info": person_json_info,
+                            "picture": picture_path,
+                            "right_side_menu": FLAVOR_TEXT_MENU
+                                                                }
+                                                                    )
 
 def index(request):
+    """View for basic home page."""
     context = "Placeholder Home Page Text"
-    return render(request, "Insurence_Web/home/home.html",  {"message": context,
-                                                             "right_side_menu": flavor_text_menu})
+    return render(request,
+                  "Insurence_Web/home/home.html",
+                        {
+                            "message": context,
+                            "right_side_menu": FLAVOR_TEXT_MENU
+                                                                }
+                                                                    )
 
 def index_updates(request):
+    """View for viewing new updates to this application"""
     context = "Placeholder Update"
-    return render(request, "Insurence_Web/home/updates.html",  {"message": context,
-                                                                "right_side_menu": flavor_text_menu})
+    return render(request,
+                  "Insurence_Web/home/updates.html",
+                        {
+                            "message": context,
+                            "right_side_menu": FLAVOR_TEXT_MENU
+                                                                }
+                                                                    )
 
-    # - Insured 
+    # - Insured
 def insured_new(request):
+    """View creating new insured object"""
     title = "New Insured"
     if request.method == "POST":
         form = InsuredForm(request.POST)
@@ -96,49 +103,50 @@ def insured_new(request):
             form.save()
     else:
         form = InsuredForm()
-    return render(request, "Insurence_Web/form.html", {"form": form,
-                                                        "title": title, 
-                                                        "right_side_menu": flavor_text_menu})
+    return render(request,
+                  "Insurence_Web/form.html",
+                  {
+                    "form": form,
+                    "title": title, 
+                    "right_side_menu": FLAVOR_TEXT_MENU
+                                                        }
+                                                            )
 
 def insured_search(request):
-
+    """View with search function returning back found objects"""
     title = 'Searching'
 
-    payload = {"title": title, 
-                "right_side_menu": utility_menu,}
+    payload = {"title": title,
+                "right_side_menu": UTILITY_MENU}
 
     query = request.GET.get("q")
-    options = []
 
     if query:
         payload['query'] = query
 
-        searching_results = InsuredPersons.objects.all()
-        search_fields = get_fields_search(InsuredPersons)
-
-            # Fix ak to uz najde cloveka znova nech ju to len skipne
-        for word in query.split():
-            q_object = Q()
-            for field_name, lookup in search_fields:
-                if lookup:
-                    q_object |= Q(**{f"{field_name}{lookup}": word})
-                elif word.isdigit():
-                    q_object |= Q(**{field_name: int(word)})
-
-                searching_results = searching_results.filter(q_object)
+        searching_results = InsuredPersons.objects.filter(
+            Q(insured_id__icontains=query)
+            | Q(first_name__icontains=query)
+            | Q(last_name__icontains=query)
+            | Q(state__icontains=query)
+            | Q(city__icontains=query)
+            | Q(phone_number__icontains=query)
+            | Q(email__icontains=query)
+        )
 
         if searching_results.exists():
             data_payload = {}
             person_count = 0
             for person in searching_results:
-                data_payload[person.get_id()] = person.information_to_json_searching_results()
+                data_payload[person.get_id()] = person.searching_results_dict()
+                person_count += 1
 
             payload['search_result_data'] = data_payload
 
             button_count = person_count / 12
 
             if button_count >= 1:
-                if button_count == float:
+                if isinstance(button_count, float):
                     button_count = int(button_count) + 1
                 button_range = (1, button_count)
                 payload['button_range'] = button_range
@@ -151,6 +159,7 @@ def insured_search(request):
 
     # - Insurences
 def insurence_new(request):
+    """View creating new insurence forms"""
     title = "New Insurence"
     if request.method == "POST":
         form = InsurenceForm(request.POST)
@@ -158,9 +167,14 @@ def insurence_new(request):
             form.save()
     else:
         form = InsurenceForm()
-    return render(request, "Insurence_Web/form.html", {"form": form,
-                                                       "title": title, 
-                                                       "right_side_menu": flavor_text_menu})
+    return render(request,
+                  "Insurence_Web/form.html", 
+                  {
+                    "form": form,
+                    "title": title, 
+                    "right_side_menu": FLAVOR_TEXT_MENU
+                                                        }
+                                                            )
 
 #def insurence_my():
 
@@ -168,6 +182,7 @@ def insurence_new(request):
 
     # - Questionares
 def questionare_new(request):
+    """View creating new questionares forms"""
     title = "New Questionare"
     if request.method == "POST":
         form = QuestionareForm(request.POST)
@@ -175,16 +190,11 @@ def questionare_new(request):
             form.save()
     else:
         form = QuestionareForm()
-    return render(request, "Insurence_Web/form.html", {"form": form,
-                                                       "title": title, 
-                                                       "right_side_menu": flavor_text_menu})
-"""  
-def questionare_search():
-
-    # - Account
-def account_profile():
-
-def account_settings():
-
-def account_sign_out():
-"""
+    return render(request,
+                    "Insurence_Web/form.html",
+                        {
+                            "form": form,
+                            "title": title, 
+                            "right_side_menu": FLAVOR_TEXT_MENU
+                                                                }
+                                                                    )
