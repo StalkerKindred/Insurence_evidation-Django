@@ -51,8 +51,9 @@ class InsurerEmployees(models.Model):
     def __str__(self):
         return  self.first_name + f" {self.last_name}" + f" - ID: {self.insurer_id}"
 
-    def contacts(self):
-        return (f"Email: {self.email}")
+    def get_id(self):
+        """Returns ID"""
+        return self.insurer_id
 
 class InsuredPersons(models.Model):
     #Keys
@@ -80,6 +81,7 @@ class InsuredPersons(models.Model):
     email = models.EmailField()
 
     def get_age(self):
+        """Returns calculated age based on date of birth"""
         today = date.today()
         age = today.year - self.date_of_birth.year
 
@@ -91,15 +93,18 @@ class InsuredPersons(models.Model):
     # Functions for Views
 
     def get_gender(self):
+        """Returns gender"""
         return self.gender
 
     def get_id(self):
+        """Returns ID"""
         return self.insured_id
 
     def __str__(self):
         return  self.first_name + f" {self.last_name}"
 
     def information_to_json(self):
+        """Returns A lot of information for profile card"""
         results = {'Personal_info' : {'Name' : f'{self.first_name + ' ' + self.last_name}',
                                         'Age' : f'{self.get_age()}',
                                         'Gender' : self.gender},
@@ -115,6 +120,7 @@ class InsuredPersons(models.Model):
 
     #Function solely for searching.html so that its less of a hassle to work with it
     def searching_results_dict(self):
+        """Returns some information for basic searching results"""
         results = {
                         'Name' : f'{self.first_name + ' ' + self.last_name}',
                         'Birth' : self.date_of_birth,
@@ -122,7 +128,7 @@ class InsuredPersons(models.Model):
                         'Phone' :f'+{str(country_code_to_prefix(self.phone_number_prefix) + str(self.phone_number))}',
                         'Email' : self.email
                                                 }
-        
+
         return results
 
     def get_search_results_fields():
@@ -166,10 +172,9 @@ class InsurenceQuestionare(models.Model):
     def __str__(self):
         return (f"Insurence Questionare ID: {self.insurence_questionare_id}")
 
-    def more_info(self):
-        return (f"""Insurence Questionare ID: {self.insurence_questionare_id}
-                        Filled by {self.insured}
-                        Signed by {self.insurer}""")
+    def get_id(self):
+        """Returns ID"""
+        return self.insurence_questionare_id
 
 class Insurence(models.Model):
     #Keys
@@ -187,8 +192,6 @@ class Insurence(models.Model):
     def __str__(self):
         return (f"Insurence ID: {self.insurence_id}")
 
-    def more_info(self):
-        return (f"""Insurence  ID: {self.insurence_id}
-                        Insurence Type {self.insurence_type}
-                        Filled by {self.insured}
-                        Signed by {self.insurer}""")
+    def get_id(self):
+        """Returns ID"""
+        return self.insurence_id

@@ -1,5 +1,7 @@
 from django.urls import path
 
+from .models import InsuredPersons
+
 from . import views
 
 urlpatterns = [
@@ -9,7 +11,7 @@ urlpatterns = [
     path("Home/Updates", views.index_updates, name="Updates"),
     #Insured things
     path("Insured/New", views.insured_new, name="Insured New"),
-    path("Insured/Searching", views.insured_search, name="Insured Searching"),
+    path("Insured/Searching", views.search, {"model": InsuredPersons}, name="Insured Searching"),
     #path("insured/searching/{sql bs}", views.insured_new, name="insured new"),
     path("Insured/Profile/<int:id>", views.insured_profile, name="Insured Profile"),
     #Insurence things

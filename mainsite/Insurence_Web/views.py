@@ -112,8 +112,8 @@ def insured_new(request):
                                                         }
                                                             )
 
-def insured_search(request):
-    """View with search function returning back found objects"""
+def search(request, model=None):
+    """View with search function returning back found objects of a model"""
     title = 'Searching'
 
     payload = {"title": title,
@@ -124,7 +124,7 @@ def insured_search(request):
     if query:
         payload['query'] = query
 
-        searching_results = InsuredPersons.objects.filter(
+        searching_results = model.objects.filter(
             Q(insured_id__icontains=query)
             | Q(first_name__icontains=query)
             | Q(last_name__icontains=query)
@@ -136,14 +136,22 @@ def insured_search(request):
 
         if searching_results.exists():
             data_payload = {}
-            person_count = 0
-            for person in searching_results:
-                data_payload[person.get_id()] = person.searching_results_dict()
-                person_count += 1
+            item_count = 0
+
+            #Getting fields for view
+            object_fields = []
+            for key in searching_results[0].searching_results_dict():
+                object_fields.append(key)
+
+            payload['search_result_fields'] = object_fields
+            #Getting Data and their fields for view
+            for item in searching_results:
+                data_payload[item.get_id()] = item.searching_results_dict()
+                item_count += 1
 
             payload['search_result_data'] = data_payload
 
-            button_count = person_count / 12
+            button_count = item_count / 12
 
             if button_count >= 1:
                 if isinstance(button_count, float):
