@@ -3,7 +3,14 @@
         <!-- Blank/Utility menu -->
     {% if right_side_menu_content %}
       <ul class="nav flex-column">
-        {% for item in utility_menu %}
+        {% for item in utility_menu_navbox%}
+          <label>
+            <input type="checkbox" name="all" value="1">
+             Show all
+          </label>
+        {% endfor %}
+
+        {% for item in utility_menu_checkbox%}
           <li class="nav-item">
             <a class="nav-link" href="{% url item.url %}">
               {{ item.name }}

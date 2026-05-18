@@ -4,7 +4,6 @@ from django.db import models
 
 from phonenumbers import phonenumberutil as pnu # import COUNTRY_CODE_TO_REGION_CODE
 
-
 def country_code_to_prefix(country_code):
     return str(pnu.country_code_for_valid_region(country_code))
 
@@ -103,7 +102,7 @@ class InsuredPersons(models.Model):
     def __str__(self):
         return  self.first_name + f" {self.last_name}"
 
-    def information_to_json(self):
+    def information_for_profile_to_json(self):
         """Returns A lot of information for profile card"""
         results = {'Personal_info' : {'Name' : f'{self.first_name + ' ' + self.last_name}',
                                         'Age' : f'{self.get_age()}',
@@ -119,10 +118,9 @@ class InsuredPersons(models.Model):
         return results
 
     #Function solely for searching.html so that its less of a hassle to work with it
-    def searching_results_dict(self):
+    def searching_results_data(self):
         """Returns some information for basic searching results"""
-        results = {
-                        'Name' : f'{self.first_name + ' ' + self.last_name}',
+        results =   {   'Name' : f'{self.first_name + ' ' + self.last_name}',
                         'Birth' : self.date_of_birth,
                         'City' : self.city,
                         'Phone' :f'+{str(country_code_to_prefix(self.phone_number_prefix) + str(self.phone_number))}',
@@ -131,16 +129,16 @@ class InsuredPersons(models.Model):
 
         return results
 
-    def get_search_results_fields():
-        results = {"text_field":(       "first_name__",
-                                        "last_name__",
-                                        "email__",
-                                        "state__",
-                                        "city__"
+    def field_names_for_searching():
+        results = {"text_field":(       "first_name",
+                                        "last_name",
+                                        "email",
+                                        "state",
+                                        "city"
                                                 ),
 
-                   "integer_field":(    "insured_id__",
-                                        "phone_number__"
+                   "integer_field":(    "insured_id",
+                                        "phone_number"
                                                         )
                                                         }
 

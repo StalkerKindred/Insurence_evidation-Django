@@ -15,36 +15,23 @@ SEARCH_LOOKUP_TYPE = "__icontains"
 #---------------------------Functions for views---------------------------
 #-------------------------------------------------------------------------
 
+#Redundant
 def get_fields_search(model):
     search_fields = []
-    for field in model._meta.fields:
-        if field.get_internal_type() in ["CharField", "TextField"]:
-            search_fields.append((field.name, f"{SEARCH_LOOKUP_TYPE}"))
-        elif field.get_internal_type() in ["IntegerField"]:
-            search_fields.append((field.name, ""))
+    model_fields = model.field_names_for_searching()
+    for field in model_fields["text_field"]:
+        search_fields.append((field + f"{SEARCH_LOOKUP_TYPE}"))
+    for field in model_fields["integer_field"]:
+        search_fields.append((field + f"{SEARCH_LOOKUP_TYPE}"))
     return search_fields
-    
-def get_fields(model):
-    return [field.name for field in model._meta.fields]
 
-def get_field_data(fields, instance):
-    data = []
-    for field in fields:
-        data.append(getattr(instance, field))
-    return data
+#------------------------------------------------------------------------
+#---------------------------Views----------------------------------------
+#------------------------------------------------------------------------
 
-def get_all_model_instances(model):
-    """Returns all objects of a model given"""
-    models = model.objects.all()
-    return models
-
-#-----------------------------------------------------------
-#---------------------------Views---------------------------
-#-----------------------------------------------------------
-
-def insured_profile(request, id):
+def insured_profile(request, model_id):
     """View for insured profile."""
-    person = get_object_or_404(InsuredPersons, pk=id)
+    person = get_object_or_404(InsuredPersons, pk=model_id)
 
     picture_path = ""
 
@@ -57,7 +44,7 @@ def insured_profile(request, id):
     else:
         picture_path = "images/unspecified_gender_icon.png"
 
-    person_json_info =  person.information_to_json()
+    person_json_info =  person.information_for_profile_to_json()
 
     title = person_json_info["Personal_info"]["Name"]
 
@@ -121,32 +108,34 @@ def search(request, model=None):
 
     query = request.GET.get("q")
 
-    if query:
+    show_all = request.GET.get("all")
+
+    if query or show_all:
         payload['query'] = query
 
-        searching_results = model.objects.filter(
-            Q(insured_id__icontains=query)
-            | Q(first_name__icontains=query)
-            | Q(last_name__icontains=query)
-            | Q(state__icontains=query)
-            | Q(city__icontains=query)
-            | Q(phone_number__icontains=query)
-            | Q(email__icontains=query)
-        )
+        fields = get_fields_search(model)
+
+        if query:     
+            q = Q()
+            for field_name in fields:
+                q |= Q(**{field_name: query})
+            searching_results = model.objects.filter(q)
+        else:
+            searching_results = model.objects.all()
 
         if searching_results.exists():
             data_payload = {}
             item_count = 0
 
             #Getting fields for view
-            object_fields = []
-            for key in searching_results[0].searching_results_dict():
-                object_fields.append(key)
+            object_table_fields = []
+            for key in searching_results[0].searching_results_data():
+                object_table_fields.append(key)
 
-            payload['search_result_fields'] = object_fields
+            payload['search_result_fields'] = object_table_fields
             #Getting Data and their fields for view
             for item in searching_results:
-                data_payload[item.get_id()] = item.searching_results_dict()
+                data_payload[item.get_id()] = item.searching_results_data()
                 item_count += 1
 
             payload['search_result_data'] = data_payload
