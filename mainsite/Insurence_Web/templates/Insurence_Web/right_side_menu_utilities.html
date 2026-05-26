@@ -1,23 +1,75 @@
 {% block right_side_menu %}
-  <div class="col-sm-2">
-        <!-- Blank/Utility menu -->
-    {% if right_side_menu_content %}
-      <ul class="nav flex-column">
-        {% for item in utility_menu_navbox%}
-          <label>
-            <input type="checkbox" name="all" value="1">
-             Show all
-          </label>
-        {% endfor %}
+  <div class="flex-shrink-0">
+      <ul class="list-unstyled ps-0">
 
-        {% for item in utility_menu_checkbox%}
-          <li class="nav-item">
-            <a class="nav-link" href="{% url item.url %}">
-              {{ item.name }}
-            </a>
+        <!-- Blank/Utility menu -->
+
+        {% if utility_menu_functions%}
+          <li class="mb-1">
+
+            <!-- Collapseble button that will show the functions-->
+
+            <button
+              class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed"
+              data-bs-toggle="collapse"
+              data-bs-target="#function-collapse"
+              aria-expanded="false">
+              Functions
+            </button>
+
+              <div class="collapse" id="function-collapse">
+                 <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+
+                  <!-- The functions themself-->
+
+                  {% for function in utility_menu_functions%}
+
+                    <li>
+                      <buttom type="button" name="{{smth}}" value="{{smth}}">
+                        {{smth}}
+                      </button>
+                    </li>
+                  {% endfor%}
+                </ul>
+              </div>
           </li>
-        {% endfor %}
+        {% endif %}
+
+        {% if utility_menu_field_ignores%}
+          <li class="mb-1">
+
+            <!-- Collapseble button that will show the functions-->
+
+            <button
+              class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed"
+              data-bs-toggle="collapse"
+              data-bs-target="#Field_ignores-collapse"
+              aria-expanded="false">
+              Field ignores
+            </button>
+
+              <div class="collapse" id="Field_ignores-collapse">
+                 <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+
+                  <!-- The functions themself-->
+
+                  {% for ignore_field, ignore_field_data in utility_menu_field_ignores.items %}
+                    <li>
+                      <input 
+                        type="checkbox"
+                        id="{{ ignore_field }}"
+                        name="field_ignore"
+                        value="{{ ignore_field_data.value }}">
+
+                      <label for="{{ ignore_field }}">
+                        {{ ignore_field_data.checkbox_name }}
+                      </label>
+                    </li>
+                  {% endfor %}
+              </div>
+          </li>
+        {% endif %}
+
       </ul>
-    {% endif %}
   </div>
 {% endblock %}

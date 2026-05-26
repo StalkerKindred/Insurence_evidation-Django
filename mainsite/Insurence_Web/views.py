@@ -15,15 +15,29 @@ SEARCH_LOOKUP_TYPE = "__icontains"
 #---------------------------Functions for views---------------------------
 #-------------------------------------------------------------------------
 
-#Redundant
-def get_fields_search(model):
+def get_fields_search(model, search_lookup_type = None):
+    """Returns fields for SQL search look up or just the field names."""
     search_fields = []
     model_fields = model.field_names_for_searching()
     for field in model_fields["text_field"]:
-        search_fields.append((field + f"{SEARCH_LOOKUP_TYPE}"))
+        if search_lookup_type:
+            search_fields.append((field + f"{search_lookup_type}"))
+        else:
+            search_fields.append(field)
     for field in model_fields["integer_field"]:
-        search_fields.append((field + f"{SEARCH_LOOKUP_TYPE}"))
+        if search_lookup_type:
+            search_fields.append((field + f"{search_lookup_type}"))
+        else:
+            search_fields.append(field)
     return search_fields
+
+def prettier_field(field):
+    """Makes the field name look better for user, removing '_', 
+    capitalizing first letters and removing words from ID."""
+    new_field = field.replace("_"," ").capitalize()
+    if "id" in new_field:
+        new_field = "ID"
+    return new_field
 
 #------------------------------------------------------------------------
 #---------------------------Views----------------------------------------
@@ -92,12 +106,10 @@ def insured_new(request):
         form = InsuredForm()
     return render(request,
                   "Insurence_Web/form.html",
-                  {
-                    "form": form,
+                  { "form": form,
                     "title": title, 
-                    "right_side_menu": FLAVOR_TEXT_MENU
-                                                        }
-                                                            )
+                    "right_side_menu": FLAVOR_TEXT_MENU}
+                                                        )
 
 def search(request, model=None):
     """View with search function returning back found objects of a model"""
@@ -105,21 +117,34 @@ def search(request, model=None):
 
     payload = {"title": title,
                 "right_side_menu": UTILITY_MENU}
-
+    #Requests
     query = request.GET.get("q")
-
     show_all = request.GET.get("all")
 
+    #Addding them to payload
+    payload['utility_menu_functions'] = "f"
+
+    #Building up field ignores and adding them
+    if model:
+        utility_menu_field_ignores = {}
+        field_names = get_fields_search(model)
+
+        for field in field_names:
+            smth = field + "_ignore"
+            utility_menu_field_ignores[smth] =  {'value': field,
+                                                'checkbox_name': 'Ignore '+str(prettier_field(field))}
+        payload['utility_menu_field_ignores'] = utility_menu_field_ignores
+
     if query or show_all:
-        payload['query'] = query
-
-        fields = get_fields_search(model)
-
-        if query:     
+        if query:
+            payload['query'] = query
+            fields = get_fields_search(model, SEARCH_LOOKUP_TYPE)
             q = Q()
+
             for field_name in fields:
                 q |= Q(**{field_name: query})
             searching_results = model.objects.filter(q)
+
         else:
             searching_results = model.objects.all()
 
