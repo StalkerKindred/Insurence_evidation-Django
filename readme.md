@@ -110,7 +110,7 @@ Clone repository:
 
 ```bash
 git clone https://github.com/YOUR_USERNAME/Insurence_evidation-Django.git
-cd Insurence_evidation-Django
+cd Insurence_evidation-Django/mainsite
 ```
 
 Create virtual environment:
