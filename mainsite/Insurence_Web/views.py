@@ -132,7 +132,7 @@ def search(request, model=None):
         for field in field_names:
             smth = field + "_ignore"
             utility_menu_field_ignores[smth] =  {'value': field,
-                                                'checkbox_name': 'Ignore '+str(prettier_field(field))}
+                                                'checkbox_name': 'Ignore '+ str(prettier_field(field))}
         payload['utility_menu_field_ignores'] = utility_menu_field_ignores
 
     if query or show_all:
@@ -140,6 +140,9 @@ def search(request, model=None):
             payload['query'] = query
             fields = get_fields_search(model, SEARCH_LOOKUP_TYPE)
             q = Q()
+
+            ignored_fields = request.GET.getlist("field_ignore")
+            print(ignored_fields)
 
             for field_name in fields:
                 q |= Q(**{field_name: query})

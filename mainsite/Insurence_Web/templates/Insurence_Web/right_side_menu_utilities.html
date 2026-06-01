@@ -45,7 +45,7 @@
               data-bs-toggle="collapse"
               data-bs-target="#Field_ignores-collapse"
               aria-expanded="false">
-              Field ignores
+                Field ignores
             </button>
 
               <div class="collapse" id="Field_ignores-collapse">
@@ -64,6 +64,7 @@
                       <label for="{{ ignore_field }}">
                         {{ ignore_field_data.checkbox_name }}
                       </label>
+                      <P>{{ ignore_field_data.value }}</P>
                     </li>
                   {% endfor %}
               </div>
