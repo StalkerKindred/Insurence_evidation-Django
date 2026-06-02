@@ -109,7 +109,7 @@ Insurence_evidation-Django/
 Clone repository:
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/Insurence_evidation-Django.git
+git clone https://github.com/StalkerKindred/Insurence_evidation-Django.git
 cd Insurence_evidation-Django/mainsite
 ```
 
